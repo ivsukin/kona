@@ -8,8 +8,9 @@ OS := $(shell uname -s | tr "[:upper:]" "[:lower:]")
 $(info OS="$(OS)")
 
 # Win-64
-ifeq (mingw64_nt-10.0-22000,$(OS))
-CC=gcc -DWIN32=1
+OSWIN := $(shell echo $(OS) | cut -c -10)
+ifeq (mingw64_nt,$(OSWIN))
+CC=cc -DWIN32=1
 PRODFLAGS += -D_FILE_OFFSET_BITS=64
 LDFLAGS = -lws2_32 -static -lpthread
 OBJS= src/win/mman.o src/win/dlfcn.o src/win/safe-ctype.o src/win/fnmatch.o \
@@ -20,8 +21,8 @@ OBJS= src/win/mman.o src/win/dlfcn.o src/win/safe-ctype.o src/win/fnmatch.o \
 endif
 
 # Win-32
-ifeq (mingw32_nt-10.0,$(OS))
-CC=gcc -DWIN32=1
+ifeq (mingw32_nt,$(OSWIN))
+CC=cc -DWIN32=1
 LDFLAGS = -lws2_32 -static -lpthread
 OBJS= src/win/mman.o src/win/dlfcn.o src/win/safe-ctype.o src/win/fnmatch.o \
 			src/win/pread.o src/win/usleep.o \
